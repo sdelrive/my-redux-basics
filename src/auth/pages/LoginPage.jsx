@@ -4,8 +4,14 @@ import { Google } from "@mui/icons-material";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks/useForm";
 import { useState } from "react";
+import {
+  checkingAuthentication,
+  startGoogleSignIn,
+} from "../../store/auth/thunks";
+import { useDispatch } from "react-redux";
 
 export const LoginPage = () => {
+  const dispatch = useDispatch();
   const { email, password, onInputChange } = useForm({
     email: "fernando@google.com",
     password: "12345678",
@@ -13,9 +19,11 @@ export const LoginPage = () => {
 
   const onGoogleSignIn = (e) => {
     console.log("asdas");
+    dispatch(startGoogleSignIn());
   };
   const onSubmit = (e) => {
     e.preventDefault();
+    dispatch(checkingAuthentication());
 
     console.log({ email, password });
   };
