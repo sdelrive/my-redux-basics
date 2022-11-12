@@ -1,4 +1,12 @@
 import { Link as RouterLink } from "react-router-dom";
+import { useState, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { AuthLayout } from "../layout/AuthLayout";
+import { useForm } from "../../hooks/useForm";
+import { registerUser } from "../../firebase/providers";
+import { startCreatingUser } from "../../store/auth/thunks";
+//mui
 import {
   Alert,
   Button,
@@ -8,19 +16,15 @@ import {
   Typography,
 } from "@mui/material";
 import { Google } from "@mui/icons-material";
-import { AuthLayout } from "../layout/AuthLayout";
-import { useForm } from "../../hooks/useForm";
-import { useState, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../../firebase/providers";
-import { startCreatingUser } from "../../store/auth/thunks";
 
+//Datos iniciales del formulario
 const formData = {
   email: "",
   password: "",
   displayName: "",
 };
 
+//validacion del formulario
 const formValidations = {
   email: [(value) => value.includes("@"), "El correo debe contener un @"],
   password: [
@@ -32,8 +36,8 @@ const formValidations = {
 
 export const RegisterPage = () => {
   const dispatch = useDispatch();
-  const [formSubmitted, setFormSubmitted] = useState(false);
 
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const { status, errorMessage } = useSelector((state) => state.auth);
   const isCheckingAuthentication = useMemo(
     () => status === "checking",

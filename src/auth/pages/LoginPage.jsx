@@ -1,23 +1,26 @@
 import { Link as RouterLink } from "react-router-dom";
-import { Button, Grid, Link, TextField, Typography } from "@mui/material";
-import { Google } from "@mui/icons-material";
+import { useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks/useForm";
-import { useState } from "react";
 import {
   checkingAuthentication,
   startGoogleSignIn,
+  startLoginWithEmailPassword,
 } from "../../store/auth/thunks";
-import { useDispatch, useSelector } from "react-redux";
-import { useMemo } from "react";
+
+import { Button, Grid, Link, TextField, Typography } from "@mui/material";
+import { Google } from "@mui/icons-material";
 
 export const LoginPage = () => {
+  const dispatch = useDispatch();
+
   const { status } = useSelector((state) => state.auth);
 
-  const dispatch = useDispatch();
   const { email, password, onInputChange } = useForm({
-    email: "fernando@google.com",
-    password: "12345678",
+    email: "",
+    password: "",
   });
 
   const isAuthenticated = useMemo(() => status === "checking", [status]);
@@ -29,6 +32,8 @@ export const LoginPage = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(checkingAuthentication());
+    const data = { email, password };
+    dispatch(startLoginWithEmailPassword(data));
 
     console.log({ email, password });
   };

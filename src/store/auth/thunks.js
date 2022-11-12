@@ -1,10 +1,21 @@
 import { async } from "@firebase/util";
-import { registerUser, signInWithGoogle } from "../../firebase/providers";
+import { DateRange } from "@mui/icons-material";
+import {
+  loginWithEmailPassword,
+  registerUser,
+  signInWithGoogle,
+} from "../../firebase/providers";
 import { checkingCredentials, login, logout } from "./authSlice";
 
 export const checkingAuthentication = (email, password) => {
   return async (dispatch) => {
     dispatch(checkingCredentials());
+  };
+};
+
+export const startLoginWithEmailPassword = (data) => {
+  return async (dispatch) => {
+    dispatch(loginWithEmailPassword(data));
   };
 };
 export const startGoogleSignIn = () => {
