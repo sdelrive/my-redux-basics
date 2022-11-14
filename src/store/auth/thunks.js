@@ -2,6 +2,7 @@ import { async } from "@firebase/util";
 import { DateRange } from "@mui/icons-material";
 import {
   loginWithEmailPassword,
+  logoutFirebase,
   registerUser,
   signInWithGoogle,
 } from "../../firebase/providers";
@@ -13,9 +14,17 @@ export const checkingAuthentication = (email, password) => {
   };
 };
 
-export const startLoginWithEmailPassword = (data) => {
+export const startLoginWithEmailPassword = ({ email, password }) => {
   return async (dispatch) => {
-    dispatch(loginWithEmailPassword(data));
+    dispatch(checkingCredentials());
+
+    const res = await loginWithEmailPassword({ email, password });
+    console.log(res);
+
+    if (!res.ok) {
+      return dispatch(logout(res));
+    }
+    dispatch(login(res));
   };
 };
 export const startGoogleSignIn = () => {
@@ -39,5 +48,13 @@ export const startCreatingUser = ({ email, password, displayName }) => {
     });
     if (!ok) return dispatch(logout({ errorMessage }));
     dispatch(login({ uid, displayName, email, photoURL }));
+  };
+};
+
+export const startLogout = () => {
+  return async (dispatch) => {
+    await logoutFirebase();
+
+    dispatch(logout());
   };
 };
